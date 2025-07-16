@@ -1,75 +1,55 @@
 `timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 14.07.2025 15:06:07
+// Design Name: 
+// Module Name: mmi_to_copcom
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
 
 module mmi_to_copcom (
     // i/o between MMI
-    input   [31:0]  data_router,
-    input   [31:0]  data_from_reader,
-    input   [31:0]  read_address,
-    output  [31:0]  write_address,
-    output  [31:0]  data_out
+    //input   wire        clk,
+    output  wire [55:0]  o_mmi,
+    input   wire [71:0]  i_mmi,
 
     // i/o to COPCOM
-    output  [7:0]   COPCRCEN_o, COPCRCINIT1_o, COPCRCINIT2_o, COPCRCI1_o, COPCRCI2_o;
-    output  [7:0]   COPRDEN_o, COPWR_o, COPWREN_o, COPWRLN_o;
-    input   [7:0]   COPRDSTAT, COPRD, COPRDLN, COPWRSTAT;
-    input   [7:0]   COPCRCO1, COPCRCO2, COPCRCSTAT;
+    input   [7:0]   COPCRCO1_i, COPCRCO2_i, COPCRCSTAT_i,                               // Input from CRC
+    input   [7:0]   COPRDSTAT_i, COPRD_i, COPRDLN_i, COPWRSTAT_i,                       // Input COM RD/WR
+    output  [7:0]   COPCRCEN_o, COPCRCINIT1_o, COPCRCINIT2_o, COPCRCI1_o, COPCRCI2_o,   // Output to CRC
+    output  [7:0]   COPRDEN_o, COPWR_o, COPWREN_o, COPWRLN_o                            // Output COM RD/WR
 );
 
-// To COPCOM
-localparam  COPCRCEN        = 32'hF0_00_00_00,
-            COPCRCINIT1     = 32'hF0_00_00_01,
-            COPCRCINIT2     = 32'hF0_00_00_02,
-            COPCRCI1        = 32'hF0_00_00_03,
-            COPCRCI2        = 32'hF0_00_00_04,
+// Assign I/O based on address
+assign    COPCRCEN_o      = i_mmi[7:0];
+assign    COPCRCINIT1_o   = i_mmi[15:8];
+assign    COPCRCINIT2_o   = i_mmi[23:16];
+assign    COPCRCI1_o      = i_mmi[31:24];
+assign    COPCRCI2_o      = i_mmi[39:32];
+assign    COPWREN_o       = i_mmi[47:40];
+assign    COPWR_o         = i_mmi[55:48];
+assign    COPWRLN_o       = i_mmi[63:56];
+assign    COPRDEN_o       = i_mmi[71:64];
 
-            COPWR           = 32'hF0_00_00_05,
-            COPWREN         = 32'hF0_00_00_06,
-            COPWRLN         = 32'hF0_00_00_07,
-
-            COPRDEN         = 32'hF0_00_00_08;
-
-// From COPCOM
-localparam  COPCRCSTAT      = 32'hF1_00_00_00,
-            COPCRCO1        = 32'hF1_00_00_01,
-            COPCRCO2        = 32'hF1_00_00_02,
-
-            COPWRSTAT       = 32'hF1_00_00_03,
-
-            COPRD           = 32'hF1_00_00_04,
-            COPRDSTAT       = 32'hF1_00_00_05,
-            COPRDLN         = 32'hF1_00_00_06;
-
-always @(*)
-begin
-    CASE (read_address)
-
-        // Select output data to comm
-        COPCRCEN    : COPCRCEN_o    <=  data_from_reader; 
-        COPCRCINIT1 : COPCRCINIT1_o <=  data_from_reader; 
-        COPCRCINIT2 : COPCRCINIT2_o <=  data_from_reader; 
-        COPCRCI1    : COPCRCI1_o    <=  data_from_reader; 
-        COPCRCI2    : COPCRCI2_o    <=  data_from_reader; 
-        COPWR       : COPWR_o       <=  data_from_reader; 
-        COPWREN     : COPWREN_o     <=  data_from_reader; 
-        COPWRLN     : COPWRLN_o     <=  data_from_reader; 
-        COPRDEN     : COPRDEN_o     <=  data_from_reader; 
-        
-        // Select output data to Pico
-        COPCRCSTAT  : data_out  <= COPCRCSTAT;
-        COPCRCO1    : data_out  <= COPCRCO1;
-        COPCRCO2    : data_out  <= COPCRCO2;
-        COPWRSTAT   : data_out  <= COPWRSTAT;
-        COPRD       : data_out  <= COPRD;
-        COPRDSTAT   : data_out  <= COPRDSTAT;
-        COPRDLN     : data_out  <= COPRDLN;
-
-        default     : data_out  <= 0;
-    endcase     
-
-    // meneruskan data address untuk store jika base address sesuai
-    if (read_address[31:25])
-        write_address  <= read_address;
-   
-end
+assign    o_mmi[7:0]      = COPCRCSTAT_i;
+assign    o_mmi[15:8]     = COPCRCO1_i;
+assign    o_mmi[23:16]    = COPCRCO2_i;
+assign    o_mmi[31:24]    = COPWRSTAT_i;
+assign    o_mmi[39:32]    = COPRD_i;
+assign    o_mmi[47:40]    = COPRDSTAT_i;
+assign    o_mmi[55:48]    = COPRDLN_i;
+// end
 
 endmodule
