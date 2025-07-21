@@ -1,0 +1,60 @@
+#Initial
+//Semua port 8 bit ditulis dengan nilai 0xFF 
+//Semua port 16 bit ditulis 0xFFFF
+
+#Komunikasi
+
+a = Read(o_COPRD)
+i_COPRDEN = 0x00
+i_COPRDEN = 0xFF
+If o_COPRD == 0x26 
+	i_COPWR = 0x02
+	i_COPWRLN = 0x08
+	i_COPWREN = 0x00
+	i_COPWREN = 0xFF
+
+
+#Cryptographic
+
+//write input ke adder
+// a = 5
+// b = 5
+// hasil = 10
+
+// tulis nilai a pada address shd mem 0x009F
+AdDestIn = 0x009F
+DataIn = 0x05
+ComandIn = 0x83 //0x83 adalah instruction untuk write
+ComandIn = 0xFF
+
+// tulis nilai b pada address shd mem 0x00BF
+AdDestIn = 0x00BF
+DataIn = 0x05
+ComandIn = 0x83
+ComandIn = 0xFF
+
+//Perintah jalankan addition
+ComandIn = 0x8C // instruction untuk addition
+ComandIn = 0xFF
+
+//baca hasil
+AdSrcIn = 0x01D7
+CommandIn = 0x82
+//jangan tulis perintah jika ins buffer penuh
+//wait sampai dengan StatusOut bit ketiga tidak bernilai 1 yang menandakan Ins Buffer penuh
+if bit ke-3 statusout == 0
+	continue
+else
+	wait
+//kemudian lanjutkan
+CommandIn = 0xFF
+
+//wait sampai statusOut bit ke-4 bernilai 1, data valid untuk dibaca
+if bit ke-4 statusout == 1
+	continue
+else
+	wait
+
+hasil = DataOut
+
+CommandIn = 0x00 //instruksi untuk menandakan DataOut telah dibaca
