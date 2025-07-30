@@ -1,3 +1,8 @@
+// hal.h
+// Programmer   : Ganang Aditya Pratama
+// Afiliasi     : Lab VLSI, STEI, ITB
+// Hardware Abstraction Layer untuk smart card
+
 #include <hal.h>
 #include <reg51.h>
 void coprocessor_init(){
