@@ -199,7 +199,7 @@ module smartcard_2(
     
         ISO14443_wrapper ISO14443_wrapper(
         .clk(clk_sc),
-        .reset(resetn),
+        .reset(reset),
         .o_COPCRCSTAT(COPCRCSTAT_i),
         .o_COPCRCO_1(COPCRCO1_i),
         .o_COPCRCO_2(COPCRCO2_i),
