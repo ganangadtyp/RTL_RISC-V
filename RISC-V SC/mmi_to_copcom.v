@@ -1,21 +1,15 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
+//
+// Design Name: mmi_to_cp
+// Module Name: mmi_to_cp.v
+// Project Name: riscv_smartcard
+// Target Devices: xc7a100tfgg484-2
+// Tool Versions: Vivado 2019.1
+// Description: This module connect data between the memory mapped interface (MMI) and communication modules
+//              All input and output data is explained in documentation
 // 
-// Create Date: 14.07.2025 15:06:07
-// Design Name: 
-// Module Name: mmi_to_copcom
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
+// Dependencies: none
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
