@@ -3,7 +3,9 @@
 
 # --- Configuration ---
 # Set the base name for the target firmware files
-TARGET = main
+# TARGET = main
+# TARGET = comm
+TARGET = crypto
 HAL = hal
 
 # Toolchain definitions
@@ -12,7 +14,8 @@ OBJCOPY = riscv32-unknown-elf-objcopy
 PYTHON = python3
 
 # Compiler and Linker Flags
-CFLAGS = -march=rv32i -mabi=ilp32 -g -O0 -fno-jump-tables
+# CFLAGS = -march=rv32i -mabi=ilp32 -g -Os -fno-jump-tables
+CFLAGS = -march=rv32i -mabi=ilp32 -g -Os
 LDFLAGS = -nostdlib -T smartcard_linker.ld -Wl,--no-warn-rwx-segments
 
 # Source files

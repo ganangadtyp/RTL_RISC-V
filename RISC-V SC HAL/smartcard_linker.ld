@@ -10,8 +10,8 @@ ENTRY(_start)
 
 MEMORY
 {
-  ROM (rx)  : ORIGIN = 0x00000000, LENGTH = 256K
-  RAM (rwx) : ORIGIN = 0x00050000, LENGTH = 64K
+  ROM (rx)  : ORIGIN = 0x00000000, LENGTH = 512K
+  RAM (rwx) : ORIGIN = 0x00200000, LENGTH = 64K
 }
 
 /* Define a global symbol for the top of the stack. */
@@ -26,11 +26,24 @@ SECTIONS
     *(.rodata*)
   } > ROM
 
-  .data :
+  /* Read-only data: loaded from ROM but run from RAM */
+  .rodata : ALIGN(4)
   {
-    . = ALIGN(4);
+    _rodata_load_start = LOADADDR(.rodata); /* in ROM */
+    _rodata_start = .;                      /* in RAM */
+    *(.rodata*)
+    *(.rodata.*)
+    _rodata_end = .;
+  } > RAM AT > ROM
+
+  /* Writable data: also loaded from ROM into RAM */
+  .data : ALIGN(4)
+  {
+    _data_load_start = LOADADDR(.data);
+    _data_start = .;
     *(.data*)
-  } > RAM
+    _data_end = .;
+  } > RAM AT > ROM
 
   .bss :
   {
